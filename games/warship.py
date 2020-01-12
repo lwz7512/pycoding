@@ -7,40 +7,46 @@
 
 WIDTH = 500
 HEIGHT = 350
-
-SPEED = 0
+HSPEED = 0
 
 # init actors first
 ship     = Actor('ship_s')
 ship.pos = 250, 300
-# missile     = Actor('bomb_s')
+# missile  = Actor('bomb_s')
 missiles = []
-
 
 
 # draw() after update() each frame
 def draw():
   screen.clear() # is a MUST
+  # first draw background
   screen.blit('earth-moon', (0, 0))
-  ship.draw()
-  
+  # then draw missiles
   for missile in missiles: # waiting for missle add
     missile.draw()
+  # last ship on the top of missiles
+  ship.draw()
 
 
 def update(dt):
-  ship.x += SPEED
+  print('ship x:', ship.x)
+  # move ship horizontally
+  # if ship.pos[0] >= 30 and ship.pos[0] <= WIDTH-30:
+  if ship.x + HSPEED > 30 and ship.x + HSPEED < WIDTH-30:
+    ship.x += HSPEED
+  # move ship vertically ?
+  
   # print('update...')
   for missile in missiles: # update position
     missile.y -= 3
     if(missile.y < 0):
       missiles.remove(missile)
   
-  print('missiles length:', len(missiles))
+  # print('missiles length:', len(missiles))
 
 
 def on_key_down(key):
-  global SPEED, FIRE
+  global HSPEED, FIRE
 
   if key == keys.SPACE:
     print('create new missile')
@@ -49,12 +55,12 @@ def on_key_down(key):
     missiles.append(missile)
     sounds.fire.play()
 
-  if key == keys.LEFT:
-    SPEED = -4
+  if key == keys.LEFT :
+    HSPEED = -4
     print('move left')
 
   if key == keys.RIGHT:
-    SPEED = 4
+    HSPEED = 4
     print('move right')
 
   if key == keys.UP:
@@ -65,9 +71,12 @@ def on_key_down(key):
 
 
 def on_key_up(key):
-  global SPEED
-
-  SPEED = 0
+  global HSPEED
+  HSPEED = 0
+  if ship.pos[0] < 30:
+    ship.x = 30
+  if ship.pos[0] > WIDTH-30:
+    ship.x = WIDTH-30
 
 def on_mouse_move(pos):
   # ship.angle = ship.angle_to(pos)
