@@ -5,6 +5,36 @@
 # from pygame.constants import HWSURFACE, SRCALPHA
 
 
+# ======== Alien UFO ==========
+class Alien(Actor):
+
+  animcycle = 9
+  HSPEED = 90
+
+  def __init__(self, startpoint, **kwargs):
+    super(Alien, self).__init__('alien1', **kwargs)
+    self.frame = 0
+    self.stp = startpoint
+    self.pos = startpoint
+    self.images = ['alien1', 'alien2', 'alien3']
+
+  def update(self):
+    # change skin
+    self.frame = self.frame + 1
+    self.image = self.images[self.frame // self.animcycle % 3]
+
+  def move(self, dt, bounds):
+    self.x += dt*self.HSPEED
+    if(self.x > bounds[0] - 18):
+      self.HSPEED = -self.HSPEED
+    if(self.x < 18):
+      self.HSPEED = -self.HSPEED
+
+  def shot(self):
+    pass
+
+# ======== Main ===============
+
 WIDTH = 500
 HEIGHT = 350
 HSPEED = 0
@@ -14,6 +44,7 @@ ship     = Actor('ship_s')
 ship.pos = 250, 300
 # missile  = Actor('bomb_s')
 missiles = []
+ufo      = Alien((20, 30))
 
 
 # draw() after update() each frame
@@ -26,6 +57,8 @@ def draw():
     missile.draw()
   # last ship on the top of missiles
   ship.draw()
+  # one uft
+  ufo.draw()
 
 
 def update(dt):
@@ -43,6 +76,8 @@ def update(dt):
       missiles.remove(missile)
   
   # print('missiles length:', len(missiles))
+  ufo.update()
+  ufo.move(dt, (WIDTH, HEIGHT))
 
 
 def on_key_down(key):
