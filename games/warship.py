@@ -64,6 +64,7 @@ HEIGHT = 350
 
 ship     = Player((250, 300))
 ufo      = Alien((20, 30))
+ufo.shot = False
 missiles = []
 
 # draw() after update() each frame
@@ -76,7 +77,8 @@ def draw():
   # last ship on the top of missiles
   ship.draw()
   # one uft
-  ufo.draw()
+  if not ufo.shot:
+    ufo.draw()
 
 def _renderMissiles():
   for missile in missiles: # waiting for missle add
@@ -90,6 +92,8 @@ def update(dt):
   # print('missiles length:', len(missiles))
   ufo.update()
   ufo.move(dt, (WIDTH, HEIGHT))
+  _hitAlien()
+
 
 def _updateMissiles():
   for missile in missiles: # update position
@@ -97,14 +101,12 @@ def _updateMissiles():
     if(missile.y < 0):
       missiles.remove(missile)
 
-def _updateMissiles():
-  pass
-
 def on_key_down(key):
   global HSPEED, FIRE
 
   if key == keys.SPACE:
     print('create new missile')
+    _fire()
 
   if key == keys.LEFT :
     ship.toLeft()
@@ -126,3 +128,14 @@ def on_key_up(key):
 def on_mouse_move(pos):
   # ship.angle = ship.angle_to(pos)
   pass
+
+def _fire():
+  missile = Actor('bomb_s')
+  missile.pos = ship.pos[0], ship.pos[1] - 20
+  missiles.append(missile)
+  sounds.fire.play()
+
+def _hitAlien():
+  c = ufo.collidelist(missiles)
+  if c > -1:
+    ufo.shot = True
