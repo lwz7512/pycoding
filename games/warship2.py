@@ -1,10 +1,7 @@
-# first Pygame-zero project
-# @2020/01/08
+# warship step 2: Multiple UFO
+# @2020/02/02
 
-# from pygame import Surface, Rect
-# from pygame.constants import HWSURFACE, SRCALPHA
-
-
+import random
 
 # ======== Player =============
 class Player(Actor):
@@ -34,15 +31,16 @@ class Player(Actor):
 class Alien(Actor):
 
   animcycle = 9
-  HSPEED = 90
 
   def __init__(self, startpoint, **kwargs):
     super(Alien, self).__init__('alien1', **kwargs)
     self.frame = 0
     self.pos = startpoint
     self.images = ['alien1', 'alien2', 'alien3']
+    self.HSPEED = random.choice([-1, 1])*90
+    self.shot = False
 
-  def update(self):
+  def blink(self):
     # change skin
     self.frame = self.frame + 1
     self.image = self.images[self.frame // self.animcycle % 3]
@@ -57,28 +55,36 @@ class Alien(Actor):
   def shot(self):
     pass
 
-# ======== Main ===============
+# ============ MAIN ===============
 
 WIDTH = 500
 HEIGHT = 350
 
-ship     = Player((250, 300))
-ufo      = Alien((20, 30))
-ufo.shot = False
-missiles = []
+ship        = Player((250, 300))
+missiles    = []
+ufoHomeShip = []
+shoted      = 0
+
+def _createAlien():
+  # print('create one alien...')
+  rnd = random.randint(40, 400)
+  ufo = Alien((rnd, 50))
+  ufoHomeShip.append(ufo)
 
 # draw() after update() each frame
 def draw():
   screen.clear() # is a MUST
   # first draw background
   screen.blit('earth-moon', (0, 0))
-  # then draw missiles
-  _renderMissiles()
+  # draw score:
+  screen.draw.text("You Shot "+str(shoted)+" UFO", (10, 10), color="green")
   # last ship on the top of missiles
   ship.draw()
-  # draw ufo not shoted
-  if not ufo.shot:
+  # draw ufos
+  for ufo in ufoHomeShip:
     ufo.draw()
+  # then draw missiles
+  _renderMissiles()
 
 def _renderMissiles():
   for missile in missiles: # waiting for missle add
@@ -89,11 +95,13 @@ def update(dt):
   ship.move(dt, (WIDTH, HEIGHT))
   # move ship vertically ?
   _updateMissiles()
-  # print('missiles length:', len(missiles))
-  ufo.update()
-  ufo.move(dt, (WIDTH, HEIGHT))
+  _updateUFOs(dt)
   _hitAlien()
 
+def _updateUFOs(dt):
+  for ufo in ufoHomeShip:
+    ufo.blink()
+    ufo.move(dt, (WIDTH, HEIGHT))
 
 def _updateMissiles():
   for missile in missiles: # update position
@@ -126,7 +134,6 @@ def on_key_up(key):
   ship.stopMove()
 
 def on_mouse_move(pos):
-  # ship.angle = ship.angle_to(pos)
   pass
 
 def _fire():
@@ -136,6 +143,18 @@ def _fire():
   sounds.fire.play()
 
 def _hitAlien():
-  c = ufo.collidelist(missiles)
-  if c > -1:
-    ufo.shot = True
+  global shoted
+  for ufo in ufoHomeShip:
+    for missile in missiles:
+      shot = missile.collidepoint(ufo.center)
+      if shot:
+        ufo.shot = True
+        return missiles.remove(missile)
+  for ufo in ufoHomeShip:
+    if ufo.shot:
+      shoted += 1
+      return ufoHomeShip.remove(ufo)
+
+
+_createAlien()
+clock.schedule_interval(_createAlien, 2)
