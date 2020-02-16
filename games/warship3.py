@@ -1,4 +1,4 @@
-# warship step 2: Multiple UFO
+# warship step 3: Multiple UFO with explostion effect
 # @2020/02/02
 
 import random
