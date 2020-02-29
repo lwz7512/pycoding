@@ -193,6 +193,8 @@ def on_mouse_move(pos):
   pass
 
 def _fire():
+  if not ship.alive :
+    return
   missile = Actor('bomb_s')
   missile.pos = ship.pos[0], ship.pos[1] - 20
   missiles.append(missile)
