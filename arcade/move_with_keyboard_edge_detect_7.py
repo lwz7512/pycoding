@@ -33,17 +33,14 @@ class Ball:
             self.position_x = self.radius
 
 
-
         if self.position_x > SCREEN_WIDTH - self.radius:
 
             self.position_x = SCREEN_WIDTH - self.radius
 
 
-
         if self.position_y < self.radius:
 
             self.position_y = self.radius
-
 
 
         if self.position_y > SCREEN_HEIGHT - self.radius:

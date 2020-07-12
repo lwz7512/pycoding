@@ -3,7 +3,7 @@ import arcade
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
 
-MOVEMENT_MAX_SPEED = 10  # initial speed, V0
+MOVEMENT_MAX_SPEED = 13  # initial speed, V0
 
 
 
@@ -78,15 +78,6 @@ class MyGame(arcade.Window):
     def on_key_release(self, key, modifiers):
 
         """ Called whenever a user releases a key. """
-
-        # if key == arcade.key.LEFT or key == arcade.key.RIGHT:
-
-        #     self.ball.change_x = 0
-
-        # elif key == arcade.key.UP or key == arcade.key.DOWN:
-
-        #     self.ball.change_y = 0
-
 
 
 def main():
