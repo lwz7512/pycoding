@@ -74,7 +74,11 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
+        # Load the sound when the application starts
+        self.coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
+
         arcade.set_background_color(arcade.color.AMAZON)
+
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -139,6 +143,9 @@ class MyGame(arcade.Window):
         for coin in hit_list:
             coin.remove_from_sprite_lists()
             self.score += 1
+
+        if len(hit_list) > 0 :
+            arcade.play_sound(self.coin_sound)
 
 
 def main():

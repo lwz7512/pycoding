@@ -30,7 +30,13 @@ class MyGame(arcade.Window):
         self.score = 0
 
         # Don't show the mouse cursor
-        self.set_mouse_visible(False)
+        # self.set_mouse_visible(False)
+
+        # Load the sound when the application starts
+        self.explosion_sound = arcade.load_sound(":resources:sounds/explosion2.wav")
+
+        # load fire sound
+        self.fire_sound = arcade.load_sound(":resources:sounds/laser1.mp3")
 
         arcade.set_background_color(arcade.color.AMAZON)
 
@@ -47,7 +53,8 @@ class MyGame(arcade.Window):
         self.score = 0
 
         # Image from kenney.nl
-        self.player_sprite = arcade.Sprite(":resources:images/animated_characters/female_person/femalePerson_idle.png", SPRITE_SCALING_PLAYER)
+        self.shooter = ":resources:images/space_shooter/playerShip1_orange.png"
+        self.player_sprite = arcade.Sprite(self.shooter, SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 70
         self.player_list.append(self.player_sprite)
@@ -106,11 +113,34 @@ class MyGame(arcade.Window):
         # Position the bullet
         bullet.center_x = self.player_sprite.center_x
         bullet.bottom = self.player_sprite.top
-
+        # need this to move
         bullet.change_y = BULLET_SPEED
 
         # Add the bullet to the appropriate lists
         self.bullet_list.append(bullet)
+
+        arcade.play_sound(self.fire_sound)
+
+
+    def on_key_press(self, key, modifiers):
+        # Create a bullet
+        bullet = arcade.Sprite(":resources:images/space_shooter/laserRed01.png", SPRITE_SCALING_LASER)
+
+        # The image points to the right, and we want it to point up. So
+        # rotate it.
+        # bullet.angle = 90
+
+        # Position the bullet
+        bullet.center_x = self.player_sprite.center_x
+        bullet.bottom = self.player_sprite.top
+        # need this to move
+        bullet.change_y = BULLET_SPEED
+
+        # Add the bullet to the appropriate lists
+        self.bullet_list.append(bullet)
+
+        arcade.play_sound(self.fire_sound)
+
 
     def update(self, delta_time):
         """ Movement and game logic """
@@ -128,6 +158,7 @@ class MyGame(arcade.Window):
             # If it did, get rid of the bullet
             if len(hit_list) > 0:
                 bullet.remove_from_sprite_lists()
+                arcade.play_sound(self.explosion_sound)
 
             # For every coin we hit, add to the score and remove the coin
             for coin in hit_list:
