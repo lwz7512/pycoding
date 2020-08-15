@@ -78,8 +78,8 @@ class MyGame(arcade.Window):
         self.my_bullets.draw()
 
         if len(self.enemy_list) == 0 :
-          arcade.draw_text("YOU WIN", 300, 300, arcade.color.GREEN, 48)
-          arcade.draw_text("YOU WIN", 302, 300, arcade.color.RED, 48)
+          arcade.draw_text("YOU WIN", 250, 300, arcade.color.GREEN, 56)
+          arcade.draw_text("YOU WIN", 252, 300, arcade.color.RED, 56)
 
     def on_update(self, delta_time):
         """All the logic to move, and the game logic goes here. """
