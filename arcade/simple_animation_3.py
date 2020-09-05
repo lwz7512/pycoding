@@ -1,3 +1,16 @@
+""" 
+Knowledge Points:
+
+* how to move
+* move speed
+* how to stop
+* move inside boundary
+
+Assignment:
+
+* move rectangle
+* move verticle
+"""
 import arcade
 
 
