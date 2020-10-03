@@ -1,3 +1,6 @@
+# draw real line with colorful pen
+# @2020/10/03
+
 import arcade
 
 SCREEN_WIDTH = 640
@@ -27,43 +30,64 @@ class MyGame(arcade.Window):
 
         # Make the mouse disappear when it is over the window.
         # So we just see our object, not the pointer.
-
         self.set_mouse_visible(False)
-
         arcade.set_background_color(arcade.color.ASH_GREY)
+        
+        # add sprites or elements below this:
+        self.counter = 0
 
-        # Create our ball
-        self.small_ball = Ball(50, 50, 10, arcade.color.BLACK)
-        self.ball = Ball(70, 70, 15, arcade.color.AUBURN)
-        self.large_ball = Ball(100, 100, 20, arcade.color.GREEN)
+        self.small_ball = Ball(50, 50, 3, arcade.color.BLACK)
+
+        # all of points
+        self.points = []
+
+        # draw flag
+        self.draw_flag = False
+
+
+    def setup(self):
+      # add sprite here
+      pass
 
     def on_draw(self):
         """ Called whenever we need to draw the window. """
         arcade.start_render()
-        self.large_ball.draw()
-        self.ball.draw()
+        # draw pen
         self.small_ball.draw()
+        # draw line by points
+        for line in self.points:
+          arcade.draw_line_strip(line, arcade.color.BLACK, 6)
+        
+
+    def update(self, delta_time):
+        # print('>>> to update before on_draw :')
+        # print(len(self.points))
+        self.counter += 1
 
 
     def on_mouse_motion(self, x, y, dx, dy):
-
         """ Called to update our objects. Happens approximately 60 times per second."""
-
-        # print('x: '+str(x), 'y: '+str(y))
-
+        # move pen
         self.small_ball.position_x = x
         self.small_ball.position_y = y
+        # add each point to list
+        if self.draw_flag:
+          self.points[-1].append((x, y))
+
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        self.draw_flag = True
+        self.points.append([])
+
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        self.draw_flag = False
+
         
-        self.ball.position_x = x + 20
-        self.ball.position_y = y + 20
-
-        self.large_ball.position_x = x + 50
-        self.large_ball.position_y = y + 50
-
 
 
 def main():
-    window = MyGame(640, 480, "Drawing Example")
+    window = MyGame(640, 480, "Template Game")
     arcade.run()
 
 
