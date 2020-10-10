@@ -39,7 +39,7 @@ class MyGame(arcade.Window):
         self.small_ball = Ball(50, 50, 3, arcade.color.BLACK)
 
         # all of points
-        self.points = []
+        self.points = [] 
 
         # draw flag
         self.draw_flag = False

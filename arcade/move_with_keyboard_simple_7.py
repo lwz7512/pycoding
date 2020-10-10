@@ -20,12 +20,22 @@ class Ball:
 
     def draw(self):
         """ Draw the balls with the instance variables we have. """
-        arcade.draw_circle_filled(self.position_x, self.position_y, self.radius, self.color)
+        arcade.draw_rectangle_filled(self.position_x, self.position_y, self.radius, self.radius, arcade.csscolor.RED)
 
     def update(self):
+        # restrict horizontallly
+        if self.position_x <= 20 :
+            self.change_x = 0
+            self.position_x = 30
+
+        if self.position_x >= 620 :
+            self.change_x = 0
+            self.position_x = 610
+
         # Move the ball
         self.position_y += self.change_y
         self.position_x += self.change_x
+
 
 
 class MyGame(arcade.Window):
@@ -42,7 +52,7 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.ASH_GREY)
 
         # Create our ball
-        self.ball = Ball(50, 50, 0, 0, 15, arcade.color.AUBURN)
+        self.ball = Ball(150, 150, 0, 0, 30, arcade.color.AUBURN)
 
     def on_draw(self):
         """ Called whenever we need to draw the window. """
