@@ -72,6 +72,9 @@ class MyGame(arcade.Window):
 
         arcade.start_render()
 
+        if self.frame_count < 100:
+            arcade.draw_text("Press Space key to fire...", 250, 300, arcade.color.GREEN, 18)
+
         self.enemy_list.draw()
         self.bullet_list.draw()
         self.player_list.draw()
