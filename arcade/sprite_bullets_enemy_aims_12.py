@@ -8,13 +8,14 @@ python -m arcade.examples.sprite_bullets_enemy_aims
 import arcade
 import math
 import os
+import random
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Sprites and Bullets Enemy Aims Example"
 BULLET_SPEED = 8
 SPRITE_SCALING_LASER = 0.8
-
+PLAYER_SPEED = 10
 
 class MyGame(arcade.Window):
     """ Main application class """
@@ -52,6 +53,9 @@ class MyGame(arcade.Window):
         # Add player ship
         self.player = arcade.Sprite(":resources:images/space_shooter/playerShip1_orange.png", 0.5)
         self.player_list.append(self.player)
+        # add position
+        self.player.center_x = 100
+        self.player.center_y = 50
 
         # Add top-left enemy ship
         enemy = arcade.Sprite(":resources:images/space_shooter/playerShip1_green.png", 0.5)
@@ -93,6 +97,9 @@ class MyGame(arcade.Window):
 
         self.frame_count += 1
 
+        # update player position
+        self.player.center_x += self.player.change_x
+
         # Loop through each enemy that we have
         for enemy in self.enemy_list:
 
@@ -118,6 +125,10 @@ class MyGame(arcade.Window):
 
             # Set the enemy to face the player.
             enemy.angle = math.degrees(angle)-90
+
+            if self.frame_count % 120 == 0:
+              for enemy in self.enemy_list:
+                enemy.center_x = random.random() * SCREEN_WIDTH
 
             # Shoot every 60 frames change of shooting each frame
             if self.frame_count % 60 == 0:
@@ -172,22 +183,35 @@ class MyGame(arcade.Window):
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
         """Called whenever the mouse moves. """
-        self.player.center_x = x
-        self.player.center_y = y
+        # self.player.center_x = x
+        # self.player.center_y = y
 
     def on_key_press(self, key, modifiers):
-      # Create a bullet
-        bullet = arcade.Sprite(":resources:images/space_shooter/laserRed01.png", SPRITE_SCALING_LASER)
-        
-        bullet.center_x = self.player.center_x
-        bullet.bottom = self.player.top
-        # need this to move
-        bullet.change_y = BULLET_SPEED
 
-        # Add the bullet to the appropriate lists
-        self.my_bullets.append(bullet)
-        # fire with sound
-        arcade.play_sound(self.fire_sound)
+      if key == arcade.key.LEFT:
+          self.player.change_x = -PLAYER_SPEED
+      if key == arcade.key.RIGHT:
+          self.player.change_x = PLAYER_SPEED
+      
+      if key == arcade.key.SPACE:
+          # Create a bullet
+          bullet = arcade.Sprite(":resources:images/space_shooter/laserRed01.png", SPRITE_SCALING_LASER)
+          
+          bullet.center_x = self.player.center_x
+          bullet.bottom = self.player.top
+          # need this to move
+          bullet.change_y = BULLET_SPEED
+
+          # Add the bullet to the appropriate lists
+          self.my_bullets.append(bullet)
+          # fire with sound
+          arcade.play_sound(self.fire_sound)
+
+
+    def on_key_release(self, symbol, modifiers):
+      # stop moving player
+      self.player.change_x = 0
+
 
 def main():
     """ Main method """
